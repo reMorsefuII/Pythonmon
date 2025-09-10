@@ -1,0 +1,1 @@
+([('main', '/Users/frankkey/Desktop/Pythonmon/dist/main', 'EXECUTABLE')],)
