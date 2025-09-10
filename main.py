@@ -143,7 +143,7 @@ while status != "Quit":
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if status == "DisplayChoice" and not (FightBoxCheck is None) and FightBoxCheck.collidepoint(pygame.mouse.get_pos()):
                 status = "DisplayMoves"
-                print("hell yeah")
+                print("fuck yeah")
                 break
             elif status == "DisplayMoves":
                 if not (Back is None) and Back.collidepoint(pygame.mouse.get_pos()):
