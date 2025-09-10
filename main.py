@@ -110,7 +110,7 @@ def drawBottomBar():
         drawRect((200, 200, 150), "Move3Inline")
         drawRect((200, 200, 150), "Move4Inline")
         Window.blit(preparedTexts["Back"][0], preparedRects["Back"])
-        #Attack NAMES
+        #Attack NAMES                                                                                                                                                                                                                                                                                                                                                     idiot. code: thebestgamemoneycantbuy
         Window.blit(baseTextFont35.render(player.Moves[0]["Name"], True, (0, 0, 0)), preparedRects["Move1Name"])
         Window.blit(baseTextFont35.render(player.Moves[1]["Name"], True, (0, 0, 0)), preparedRects["Move2Name"])
         Window.blit(baseTextFont35.render(player.Moves[2]["Name"], True, (0, 0, 0)), preparedRects["Move3Name"])
