@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('munro.ttf', '.'), ('wingding.ttf', '.'), ('snoopfrog.png', '.'), ('testshit.jpeg', '.'), ('icon.png', '.')],
+    datas=[('munro.ttf', '.'), ('wingding.ttf', '.'), ('Snoop Dogg.png', '.'), ('Snoop Frog.png', '.'), ('Python.png', '.'), ('icon.png', '.'), ('victory.mp3', '.'), ('lowhp.mp3', '.'), ('backgroundMusic.mp3', '.'), ('damage.wav', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

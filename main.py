@@ -9,7 +9,7 @@ import sys
 import os
 
 
-status = "Start"
+status = "StartBattle"
 
 def addPath(r_path):
     try:
@@ -109,7 +109,7 @@ def drawBottomBar(text=None):
     pygame.draw.rect(Window, (150, 150, 100), (0, 400, 800, 10))
     if not (text is None):
         baseText = baseTextFont35.render(text, True, (0, 0, 0))
-    if status == "Start":
+    if status == "StartBattle":
         baseText = baseTextFont35.render(f"Your {player.Name} has challenged {enemy.Name}!", True, (0, 0, 0))
     elif status == "DisplayChoice":
         baseText = baseTextFont35.render(f"What will {player.Name} do?", True, (0, 0, 0))
@@ -140,7 +140,11 @@ def drawBottomBar(text=None):
 
         Back = preparedRects["Back"]
 
+    if random.randint(1, 100) == 100 and status == "RunMessage":
+        baseText = secretTexts[random.randint(0, 2)]
+
     Window.blit(baseText, (20, 425))
+    pygame.display.flip()
 
 def drawEnemyHealthbar(healthSet=None):
     drawRect((150, 150, 100), "EnemyHPOutline") #Outline
@@ -148,8 +152,12 @@ def drawEnemyHealthbar(healthSet=None):
 
     if healthSet is None:
         healthSet = enemy.Health
-    Window.blit(baseTextFont35.render(enemy.Name, True, (0, 0, 0)), (165, 24))  # Name
-    Window.blit(baseTextFont20.render(f"{clamp(healthSet, 0, enemy.MaxHealth)}/{enemy.MaxHealth}", True, (0, 0, 0)), (165, 57))
+    Window.blit(baseTextFont35.render(enemy.Name, True, (0, 0, 0)), (165, 21))  # Name
+    Window.blit(baseTextFont20.render(f"{clamp(healthSet, 0, enemy.MaxHealth)}/{enemy.MaxHealth}", True, (0, 0, 0)), (165, 62))
+
+    #Bar Background
+    pygame.draw.rect(Window, (150, 150, 100), (230, 64, 225, 20))
+    pygame.draw.rect(Window, (clamp(255 - 255*(healthSet/enemy.MaxHealth), 0, 255), clamp(255*(healthSet/enemy.MaxHealth), 0, 255), 0), (230, 64, 225*(healthSet/enemy.MaxHealth), 20))
 
 
 def drawPlayerHealthbar(healthSet=None):
@@ -159,9 +167,12 @@ def drawPlayerHealthbar(healthSet=None):
     if healthSet is None:
         healthSet = player.Health
     # Texts
-    Window.blit(baseTextFont35.render(player.Name, True, (0, 0, 0)), (315, 290))  # Name
-    Window.blit(baseTextFont20.render(f"{clamp(healthSet, 0, player.MaxHealth)}/{player.MaxHealth}", True, (0, 0, 0)), (315, 325))
+    Window.blit(baseTextFont35.render(player.Name, True, (0, 0, 0)), (315, 287))  # Name
+    Window.blit(baseTextFont20.render(f"{clamp(healthSet, 0, player.MaxHealth)}/{player.MaxHealth}", True, (0, 0, 0)), (315, 330))
 
+    # Bar Background
+    pygame.draw.rect(Window, (150, 150, 100), (380, 330, 225, 20))
+    pygame.draw.rect(Window, (clamp(255 - 255 * (healthSet / player.MaxHealth), 0, 255), clamp(255 * (healthSet / player.MaxHealth), 0, 255), 0),(380, 330, 225 * (healthSet / player.MaxHealth), 20))
 
 def runMessage(message : str):
     for x in range(len(message)):
@@ -191,12 +202,14 @@ while status != "Quit":
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if status == "DisplayChoice" and not (FightBoxCheck is None) and FightBoxCheck.collidepoint(pygame.mouse.get_pos()):
                 status = "DisplayMoves"
+                drawBottomBar()
                 print("fuck yeah")
                 break
             elif status == "DisplayMoves":
                 if not (Back is None):
                     if Back.collidepoint(pygame.mouse.get_pos()):
                         status = "DisplayChoice"
+                        drawBottomBar()
                         break
                     else:
                         for index, mrect in enumerate(Moves):
@@ -211,19 +224,19 @@ while status != "Quit":
                                 if enemy.takeDamage(player.Moves[index]):
                                     print(enemy.Health)
                                     changeHP = math.floor(player.Moves[index]["Power"]/20)
-                                    for i in range(20):
-                                        if changeHP == 0:
-                                            if i % 2 == 0:
-                                                drawEnemyHealthbar(math.floor(currentHP-0.5*i))
-                                        else:
-                                            drawEnemyHealthbar(currentHP-changeHP*i)
+                                    for i in range(player.Moves[index]["Power"]):
+                                        drawEnemyHealthbar(currentHP - i)
                                         pygame.display.flip()
-                                        Clock.tick(45)
+                                        Clock.tick(math.floor(player.Moves[index]["Power"] * 2.5))
+
                                     drawEnemyHealthbar()
                                     pygame.display.flip()
                                 else:
-                                    runMessage(f"{player.Name} missed their attack!")
-                                Clock.tick(1)
+                                    if random.randint(1, 2) == 2:
+                                        runMessage(f"{player.Name} missed their attack!")
+                                    else:
+                                        runMessage(f"The opposing {enemy.Name} dodged {player.Name}'s attack!")
+                                Clock.tick(2)
 
                                 if enemy.Health == 0:
                                     pygame.mixer.music.fadeout(1000)
@@ -244,20 +257,19 @@ while status != "Quit":
                                 currentHP = player.Health
                                 Clock.tick(1)
                                 if player.takeDamage(randomMove):
-                                    changeHP = math.floor(randomMove["Power"] / 20)
-                                    for i in range(20):
-                                        if changeHP == 0:
-                                            if i % 2 == 0:
-                                                drawPlayerHealthbar(math.floor(currentHP-0.5*i))
-                                        else:
-                                            drawPlayerHealthbar(currentHP-changeHP*i)
+                                    for i in range(randomMove["Power"]):
+                                        drawPlayerHealthbar(currentHP-i)
                                         pygame.display.flip()
-                                        Clock.tick(45)
+                                        Clock.tick(math.floor(randomMove["Power"]*2.5))
+
                                     drawPlayerHealthbar()
                                     pygame.display.flip()
                                 else:
-                                    runMessage(f"{enemy.Name} missed their attack!")
-                                Clock.tick(1)
+                                    if random.randint(1, 2) == 2:
+                                        runMessage(f"{enemy.Name} missed their attack!")
+                                    else:
+                                        runMessage(f"Your {player.Name} dodged {enemy.Name}'s attack!")
+                                Clock.tick(2)
 
                                 if player.Health == 0:
                                     pygame.mixer.music.fadeout(3000)
@@ -266,17 +278,21 @@ while status != "Quit":
                                     Clock.tick(0.2)
                                     status = "Quit"
                                     break
+                                elif player.Health/player.MaxHealth < 0.25:
+                                    pygame.mixer.music.fadeout(500)
+                                    pygame.mixer.music.load(addPath("lowhp.mp3"))
+                                    pygame.mixer.music.play(-1)
 
                                 status = "DisplayChoice"
-
-    drawBG()
-    drawBottomBar()
-    if status == "Start":
+                                drawBottomBar()
+    if status == "StartBattle":
+        drawBG()
+        drawBottomBar()
         intro()
+        Window.blit(playerSprite["Image"], playerSprite["Rect"])
+        Window.blit(enemySprite["Image"], enemySprite["Rect"])
+        drawEnemyHealthbar()
+        drawPlayerHealthbar()
         status = "DisplayChoice"
-    Window.blit(playerSprite["Image"], playerSprite["Rect"])
-    Window.blit(enemySprite["Image"], enemySprite["Rect"])
-    drawEnemyHealthbar()
-    drawPlayerHealthbar()
-    pygame.display.flip()
+        drawBottomBar()
     Clock.tick(60)

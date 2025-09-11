@@ -41,11 +41,31 @@ moves = [
         "Power": 25,
         "Accuracy": 100
     },
+    { #7
+        "Name": "Bug Fix",
+        "Power": 25,
+        "Accuracy": 95
+    },
+    { #8
+        "Name": "Young, Wild & Free",
+        "Power": 55,
+        "Accuracy": 70
+    },
+    { #9
+        "Name": "Dropped 'Cuz It's Hot",
+        "Power": 40,
+        "Accuracy": 85
+    },
+    { #10
+        "Name": "secret 16",
+        "Power": 16,
+        "Accuracy": 100
+    },
 ]
 movesets = {
-    "Snoop Dogg": [moves[0], moves[1], moves[2], moves[3], moves[4]],
-    "Snoop Frog": [moves[0], moves[1], moves[2], moves[3], moves[4]],
-    "Python": [moves[0], moves[2], moves[5], moves[6], moves[4]],
+    "Snoop Dogg": [moves[0], moves[1], moves[2], moves[3], moves[4], moves[8], moves[9]],
+    "Snoop Frog": [moves[0], moves[1], moves[2], moves[3], moves[4], moves[8], moves[9], moves[10]],
+    "Python": [moves[0], moves[2], moves[5], moves[6], moves[4], moves[7]],
 }
 
 healthRanges = {
